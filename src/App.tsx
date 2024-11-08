@@ -3,6 +3,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Route, Switch } from "wouter";
 import { NotFound } from "./pages/NotFound";
 import { menuItems } from "./routes";
+import { NavBar } from "./components/Navbar";
 import Context from "./context/Context";
 
 function App() {
@@ -10,6 +11,9 @@ function App() {
 
   return <>
     <NextUIProvider className={`${theme} text-foreground bg-background h-full w-full`}>
+      <header>
+        <NavBar />
+      </header>
       <main>
         <Switch>
           {menuItems.map((item, index) => (
