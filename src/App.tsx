@@ -1,17 +1,25 @@
-import { Route } from "wouter";
-import { Home } from "./pages/Home";
-import { Login } from "./pages/Login";
-import { Panel } from "./pages/Panel";
-import { Reports } from "./pages/Reports";
+import { useContext } from "react";
+import { NextUIProvider } from "@nextui-org/react";
+import { Route, Switch } from "wouter";
+import { NotFound } from "./pages/NotFound";
+import { menuItems } from "./routes";
+import Context from "./context/Context";
 
 function App() {
+  const { theme, logged } = useContext(Context);
 
   return <>
-    <Route path="/" component={Home} />
-    <Route path="/login" component={Login} />
-    <Route path="/panel" component={Panel} />
-    <Route path="/reports" component={Reports} />
+    <NextUIProvider className={`${theme} text-foreground bg-background h-full w-full`}>
+      <main>
+        <Switch>
+          {menuItems.map((item, index) => (
+            <Route key={index} path={item.link} component={item.loginNeeded && !logged ? NotFound : item.component} />
+          ))}
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </main>
+    </NextUIProvider>
   </>
 }
 
-export default App
+export default App;

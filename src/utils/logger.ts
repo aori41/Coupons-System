@@ -1,4 +1,3 @@
-
 class Logger {
 	constructor(private prefix: string, private data: any) {
 		//
