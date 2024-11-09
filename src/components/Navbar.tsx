@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Gift, Moon, Sun, UserRound } from "lucide-react";
+import { Link } from "wouter";
 import { routesHandler } from "../routes";
-import Context from "../context/Context";
 import {
 	Navbar,
 	NavbarBrand,
@@ -10,7 +10,6 @@ import {
 	NavbarMenuToggle,
 	NavbarMenu,
 	NavbarMenuItem,
-	Link,
 	Button,
 	Switch,
 	Dropdown,
@@ -18,6 +17,8 @@ import {
 	DropdownMenu,
 	DropdownItem
 } from "@nextui-org/react";
+import useCustomNavigate from "../utils/useCustomNavigate";
+import Context from "../context/Context";
 
 const clearAuthCookies = () => {
 	const cookiesToClear = ["authToken", "sessionId"];
@@ -29,7 +30,9 @@ const clearAuthCookies = () => {
 
 export const NavBar: React.FC = () => {
 	const { theme, setTheme, logged, setLogged } = useContext(Context);
-	const [openMenu, setOpenMenu] = useState(false);
+	const [openMenu, setOpenMenu] = useState<boolean>(false);
+
+	const navigate = useCustomNavigate();
 
 	const changeTheme = () => {
 		setTheme(theme === "dark" ? "light" : "dark");
@@ -38,11 +41,11 @@ export const NavBar: React.FC = () => {
 	const handleLogout = () => {
 		setLogged(false);
 		clearAuthCookies();
-		window.location.href = "/";
+		navigate("/");
 	}
 
 	return <>
-		<Navbar maxWidth="full" position="sticky" className="dark:bg-gray-600 w-full" onMenuOpenChange={setOpenMenu}>
+		<Navbar maxWidth="full" position="sticky" className="w-full bg-black/90 dark:bg-[#111827] text-[#D1D5DB]" onMenuOpenChange={setOpenMenu}>
 			<NavbarMenuToggle
 				aria-label={openMenu ? "Close menu" : "Open menu"}
 				className="sm:hidden"
@@ -53,18 +56,17 @@ export const NavBar: React.FC = () => {
 			</NavbarBrand>
 			<NavbarContent className="hidden sm:flex gap-4" justify="center">
 				{routesHandler.filter(route => route.showInNavbar && !(route.loginNeeded && !logged)).map((route, index) => (
-					<NavbarMenuItem key={index} isActive={route.link === window.location.pathname}>
-						<Link color="foreground" href={route.link}>{route.label}</Link>
+					<NavbarMenuItem key={index}>
+						<Link color="foreground" className="dark:hover:text-gray-300 hover:text-black/70 transition-color duration-100" href={route.link}>{route.label}</Link>
 					</NavbarMenuItem>
 				))}
 			</NavbarContent>
 			<NavbarMenu>
 				{routesHandler.filter(route => route.showInNavbar && !(route.loginNeeded && !logged)).map((route, index) => (
-					<NavbarMenuItem key={`${route}-${index}`}>
+					<NavbarMenuItem key={`${route.label}-${index}`}>
 						<Link
 							className={`w-full ${theme === "dark" ? "text-white" : "text-black"}`}
 							href={route.link}
-							size="lg"
 						>
 							{route.label}
 						</Link>
@@ -73,6 +75,15 @@ export const NavBar: React.FC = () => {
 			</NavbarMenu>
 			<NavbarContent justify="end">
 				<NavbarItem className="flex items-center justify-center gap-x-2">
+					<Switch
+						size="sm"
+						color="default"
+						thumbIcon={() =>
+							theme === "dark" ? <Moon strokeWidth={1.5} color="#000" size={14} /> : <Sun strokeWidth={1.5} color="#000" size={14} />
+						}
+						isSelected={theme === "dark"}
+						onValueChange={changeTheme}
+					/>
 					{logged ?
 						<Dropdown>
 							<DropdownTrigger>
@@ -99,15 +110,6 @@ export const NavBar: React.FC = () => {
 							Login
 						</Button>
 					}
-					<Switch
-						size="sm"
-						color="default"
-						thumbIcon={() =>
-							theme === "dark" ? <Sun strokeWidth={1.5} color="#000" size={14} /> : <Moon strokeWidth={1.5} size={14} />
-						}
-						isSelected={theme === "dark"}
-						onValueChange={changeTheme}
-					/>
 				</NavbarItem>
 			</NavbarContent>
 		</Navbar>

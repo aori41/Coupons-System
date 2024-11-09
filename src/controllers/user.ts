@@ -1,4 +1,4 @@
-import { logger as _logger } from "../utils/logger";
+import { logger as _logger } from "../logger";
 import { BaseController } from "./base";
 
 class UserController extends BaseController {
@@ -30,6 +30,30 @@ class UserController extends BaseController {
 			return {
 				success: false,
 				message: err.message || "Internal Application Error"
+			}
+		}
+	}
+
+	async status() {
+		try {
+			const res = await this.axiosInstance.get("/status");
+
+			const { status } = res.data;
+
+			this.logger.info(`User is Logged ${status ? "In" : "Out"}`, {
+				status
+			});
+
+			return {
+				status
+			}
+		} catch (err: any) {
+			this.logger.error("Error while trying to get user status", {
+				error: err
+			});
+
+			return {
+				status: false
 			}
 		}
 	}
