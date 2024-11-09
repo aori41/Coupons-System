@@ -83,7 +83,7 @@ export const Login: React.FC = () => {
 							size="sm"
 							isIconOnly
 							onClick={togglePasswordVisibility}
-							className="absolute bg-transparent right-1 top-1/2 transform -translate-y-1/2 flex items-center justify-center"
+							className="absolute bg-transparent z-10 right-1 top-1/2 transform -translate-y-1/2 flex items-center justify-center"
 							aria-label={showPassword ? 'Hide password' : 'Show password'}
 						>
 							{showPassword ? <EyeClosed /> : <Eye />}
