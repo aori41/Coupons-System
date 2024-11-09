@@ -3,7 +3,6 @@ import { FunctionComponent } from "react";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Panel } from "./pages/Panel";
-import { Reports } from "./pages/Reports";
 
 type RouteHandler = {
 	label: string;
