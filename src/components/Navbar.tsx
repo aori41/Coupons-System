@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Gift, Moon, Sun, UserRound } from "lucide-react";
-import { menuItems } from "../routes";
+import { routesHandler } from "../routes";
 import Context from "../context/Context";
 import {
 	Navbar,
@@ -52,21 +52,21 @@ export const NavBar: React.FC = () => {
 				<p className="font-bold text-inherit select-none">DealBreaker</p>
 			</NavbarBrand>
 			<NavbarContent className="hidden sm:flex gap-4" justify="center">
-				{menuItems.filter(item => item.showInNavbar && !(item.loginNeeded && !logged)).map((item, index) => (
-					<NavbarMenuItem key={index} isActive={item.link === window.location.pathname}>
-						<Link color="foreground" href={item.link}>{item.label}</Link>
+				{routesHandler.filter(route => route.showInNavbar && !(route.loginNeeded && !logged)).map((route, index) => (
+					<NavbarMenuItem key={index} isActive={route.link === window.location.pathname}>
+						<Link color="foreground" href={route.link}>{route.label}</Link>
 					</NavbarMenuItem>
 				))}
 			</NavbarContent>
 			<NavbarMenu>
-				{menuItems.filter(item => item.showInNavbar && !(item.loginNeeded && !logged)).map((item, index) => (
-					<NavbarMenuItem key={`${item}-${index}`}>
+				{routesHandler.filter(route => route.showInNavbar && !(route.loginNeeded && !logged)).map((route, index) => (
+					<NavbarMenuItem key={`${route}-${index}`}>
 						<Link
 							className={`w-full ${theme === "dark" ? "text-white" : "text-black"}`}
-							href={item.link}
+							href={route.link}
 							size="lg"
 						>
-							{item.label}
+							{route.label}
 						</Link>
 					</NavbarMenuItem>
 				))}

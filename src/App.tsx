@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { NextUIProvider } from "@nextui-org/react";
 import { Route, Switch } from "wouter";
 import { NotFound } from "./pages/NotFound";
-import { menuItems } from "./routes";
+import { routesHandler } from "./routes";
 import { NavBar } from "./components/Navbar";
 import Context from "./context/Context";
 
@@ -16,8 +16,8 @@ function App() {
       </header>
       <main>
         <Switch>
-          {menuItems.map((item, index) => (
-            <Route key={index} path={item.link} component={item.loginNeeded && !logged ? NotFound : item.component} />
+          {routesHandler.map((route, index) => (
+            <Route key={index} path={route.link} component={route.loginNeeded && !logged ? NotFound : route.component} />
           ))}
           <Route path="*" component={NotFound} />
         </Switch>

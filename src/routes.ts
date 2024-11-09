@@ -5,7 +5,7 @@ import { Login } from "./pages/Login";
 import { Panel } from "./pages/Panel";
 import { Reports } from "./pages/Reports";
 
-type MenuItem = {
+type RouteHandler = {
 	label: string;
 	link: string;
 	component: FunctionComponent;
@@ -13,7 +13,7 @@ type MenuItem = {
 	loginNeeded?: boolean;
 }
 
-export const menuItems: MenuItem[] = [
+export const routesHandler: RouteHandler[] = [
 	{
 		label: "Home",
 		link: "/",
