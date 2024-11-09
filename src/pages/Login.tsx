@@ -1,13 +1,14 @@
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Spinner } from "@nextui-org/react";
 import { FormEvent, useContext, useState } from "react";
 import { userController } from "../controllers/user";
+import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "react-toastify";
 import Context from "../context/Context";
 import useCustomNavigate from "../utils/useCustomNavigate";
-import { Eye, EyeClosed } from "lucide-react";
 
 export const Login: React.FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const { setLogged } = useContext(Context);
 	const navigate = useCustomNavigate();
@@ -23,6 +24,8 @@ export const Login: React.FC = () => {
 		const username = formData.get("username") as string || "";
 		const password = formData.get("password") as string || "";
 
+		setLoading(true);
+
 		const res = await userController.login(username, password);
 
 		setLogged(res.success);
@@ -33,7 +36,12 @@ export const Login: React.FC = () => {
 		} else {
 			toast.error("Invalid username or password");
 		}
+		setLoading(false);
 	};
+
+	if (loading) {
+		return <Spinner label="Loading..." color="primary" size="lg" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+	}
 
 	return <>
 		<article

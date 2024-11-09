@@ -26,8 +26,17 @@ class UserMock implements MockRule {
 					success: false,
 					message: "Invalid username or password",
 				},
-			]
+			];
 		})
+
+		mock.onGet("/status").reply(() => {
+			return [
+				200,
+				{
+					status: false
+				}
+			];
+		});
 	};
 }
 

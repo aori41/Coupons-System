@@ -1,15 +1,26 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { NextUIProvider } from "@nextui-org/react";
 import { Route, Switch } from "wouter";
 import { NotFound } from "./pages/NotFound";
 import { routesHandler } from "./routes";
 import { NavBar } from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
+import { userController } from "./controllers/user";
 import Context from "./context/Context";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { theme, logged } = useContext(Context);
+  const { theme, logged, setLogged } = useContext(Context);
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await userController.status();
+
+      setLogged(res.status);
+    }
+
+    init();
+  }, []);
 
   return <>
     <NextUIProvider className={`${theme} text-foreground bg-background h-full w-full`}>
