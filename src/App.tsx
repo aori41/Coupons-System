@@ -4,7 +4,9 @@ import { Route, Switch } from "wouter";
 import { NotFound } from "./pages/NotFound";
 import { routesHandler } from "./routes";
 import { NavBar } from "./components/Navbar";
+import { ToastContainer } from "react-toastify";
 import Context from "./context/Context";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { theme, logged } = useContext(Context);
@@ -21,6 +23,18 @@ function App() {
           ))}
           <Route path="*" component={NotFound} />
         </Switch>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick={true}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={true}
+          pauseOnHover={true}
+          limit={3}
+        />
       </main>
     </NextUIProvider>
   </>
