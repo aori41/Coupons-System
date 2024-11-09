@@ -23,7 +23,7 @@ function App() {
   }, []);
 
   return <>
-    <NextUIProvider className={`${theme} text-foreground bg-background h-full w-full`}>
+    <NextUIProvider className={`${theme} text-foreground bg-background h-full w-full overflow-x-hidden`}>
       <header>
         <NavBar />
       </header>

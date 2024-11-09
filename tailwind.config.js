@@ -15,22 +15,23 @@ export default {
     themes: {
       light: {
         colors: {
-          background: '#F9FAFB',
-          text: '#111827',
-          primary: '#3B82F6',
-          inputBg: '#FFFFFF',
-          buttonBg: '#3B82F6',
-          buttonText: '#FFFFFF',
+          background: "#F9FAFB",
+          text: "#111827",
+          primary: "#3B82F6",
+          inputBg: "#FFF",
+          buttonBg: "#3B82F6",
+          buttonText: "#FFF",
+
         },
       },
       dark: {
         colors: {
-          background: '#1F2937',
-          text: '#D1D5DB',
-          primary: '#3B82F6',
-          inputBg: '#2D3748',
-          buttonBg: '#3B82F6',
-          buttonText: '#FFFFFF',
+          background: "#1F2937",
+          text: "#D1D5DB",
+          primary: "#3B82F6",
+          inputBg: "#2D3748",
+          buttonBg: "#3B82F6",
+          buttonText: "#FFF",
         },
       },
     },

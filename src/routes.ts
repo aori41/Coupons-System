@@ -33,11 +33,4 @@ export const routesHandler: RouteHandler[] = [
 		showInNavbar: true,
 		loginNeeded: true
 	},
-	{
-		label: "Reports",
-		link: "/reports",
-		component: Reports,
-		showInNavbar: true,
-		loginNeeded: true
-	},
 ] as const;

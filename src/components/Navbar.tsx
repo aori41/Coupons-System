@@ -57,7 +57,7 @@ export const NavBar: React.FC = () => {
 			<NavbarContent className="hidden sm:flex gap-4" justify="center">
 				{routesHandler.filter(route => route.showInNavbar && !(route.loginNeeded && !logged)).map((route, index) => (
 					<NavbarMenuItem key={index}>
-						<Link color="foreground" className="dark:hover:text-gray-300 hover:text-black/70 transition-color duration-100" href={route.link}>{route.label}</Link>
+						<Link color="foreground" className="hover:text-gray-300/70 transition-color duration-100" href={route.link}>{route.label}</Link>
 					</NavbarMenuItem>
 				))}
 			</NavbarContent>
@@ -88,7 +88,7 @@ export const NavBar: React.FC = () => {
 						<Dropdown>
 							<DropdownTrigger>
 								<Button
-									variant="flat"
+									variant="solid"
 									size="sm"
 									className="font-bold"
 								>
