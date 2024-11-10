@@ -34,6 +34,36 @@ class UserController extends BaseController {
 		}
 	}
 
+	async create(username: string, password: string) {
+		try {
+			const res = await this.axiosInstance.post("/user", {
+				username,
+				password
+			});
+
+			const { success, message } = res.data;
+
+			this.logger.info(`User Created ${success ? "Successfully" : "UnSuccessfully"}`, {
+				success,
+				message
+			});
+
+			return {
+				success,
+				message
+			}
+		} catch (err: any) {
+			this.logger.error("Error while trying to create user", {
+				error: err
+			});
+
+			return {
+				success: false,
+				message: err.response.data.message || "Internal Application Error"
+			}
+		}
+	}
+
 	async status() {
 		try {
 			const res = await this.axiosInstance.get("/status");
