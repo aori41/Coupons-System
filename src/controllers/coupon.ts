@@ -27,7 +27,7 @@ class CouponController extends BaseController {
 		}
 	}
 
-	async create(coupon: CouponData) {
+	async create(coupon: CouponData): Promise<{ message: string; } | undefined> {
 		try {
 			await this.axiosInstance.post("/coupon", { ...coupon });
 			this.logger.info(`Added new Coupon`, { ...coupon });

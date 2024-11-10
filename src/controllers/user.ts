@@ -4,7 +4,7 @@ import { BaseController } from "./base";
 class UserController extends BaseController {
 	private logger = _logger.with("[UserController]");
 
-	async login(username: string, password: string) {
+	async login(username: string, password: string): Promise<{ success: boolean; message: string; }> {
 		try {
 			const res = await this.axiosInstance.post("/login", {
 				username,
@@ -34,7 +34,7 @@ class UserController extends BaseController {
 		}
 	}
 
-	async create(username: string, password: string) {
+	async create(username: string, password: string): Promise<{ success: boolean; message: string; }> {
 		try {
 			const res = await this.axiosInstance.post("/user", {
 				username,
@@ -64,7 +64,7 @@ class UserController extends BaseController {
 		}
 	}
 
-	async status() {
+	async status(): Promise<{ status: boolean; }> {
 		try {
 			const res = await this.axiosInstance.get("/status");
 
