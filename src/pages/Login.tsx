@@ -2,10 +2,10 @@ import { Input, Button, Spinner } from "@nextui-org/react";
 import { FormEvent, useContext, useState } from "react";
 import { userController } from "../controllers/user";
 import { toast } from "react-toastify";
-import Context from "../context/Context";
-import useCustomNavigate from "../utils/useCustomNavigate";
 import { PasswordInput } from "../components/PasswordInput";
 import { couponController } from "../controllers/coupon";
+import useCustomNavigate from "../utils/useCustomNavigate";
+import Context from "../context/Context";
 
 export const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -24,10 +24,7 @@ export const Login: React.FC = () => {
 
 		const res = await userController.login(username, password);
 
-		setLogged(res.success);
-
 		if (res.success) {
-			toast.success("You have logged in successfully");
 
 			const response = await couponController.load();
 
@@ -35,6 +32,9 @@ export const Login: React.FC = () => {
 				setCoupons(response.coupons);
 			}
 			navigate("/");
+
+			setLogged(res.success);
+			toast.success("You have logged in successfully");
 		} else {
 			toast.error("Failed: Invalid username or password");
 		}
@@ -47,7 +47,7 @@ export const Login: React.FC = () => {
 
 	return <>
 		<article
-			className="w-full max-w-sm sm:max-w-md bg-white dark:bg-[#2d3b4f] mx-auto mt-32 p-6 sm:p-8 rounded-lg shadow-xl"
+			className="w-full max-w-sm max-h-min sm:max-w-md bg-white dark:bg-[#2d3b4f] mx-auto mt-32 p-6 sm:p-8 rounded-lg shadow-xl"
 			aria-labelledby="login-heading"
 		>
 			<header>
@@ -74,32 +74,6 @@ export const Login: React.FC = () => {
 				</section>
 				<section>
 					<PasswordInput label="Password" id="login-password" />
-					{/* <label
-						htmlFor="password"
-						className="block text-sm dark:text-[#D1D5DB] font-medium text-gray-700"
-					>
-						Password
-					</label>
-					<div className="relative">
-						<Input
-							id="password"
-							name="password"
-							type={showPassword ? 'text' : 'password'}
-							required
-							aria-required="true"
-							placeholder="Enter your password"
-							className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-						/>
-						<Button
-							size="sm"
-							isIconOnly
-							onClick={togglePasswordVisibility}
-							className="absolute bg-transparent z-10 right-1 top-1/2 transform -translate-y-1/2 flex items-center justify-center"
-							aria-label={showPassword ? 'Hide password' : 'Show password'}
-						>
-							{showPassword ? <EyeClosed /> : <Eye />}
-						</Button>
-					</div> */}
 				</section>
 				<Button
 					type="submit"
