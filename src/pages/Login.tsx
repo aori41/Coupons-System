@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
 			toast.success("You have logged in successfully");
 			navigate("/");
 		} else {
-			toast.error("Invalid username or password");
+			toast.error("Failed: Invalid username or password");
 		}
 		setLoading(false);
 	};
