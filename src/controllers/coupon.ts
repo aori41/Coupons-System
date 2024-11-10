@@ -1,12 +1,13 @@
+import { CouponData } from "../context/Context";
 import { logger as _logger } from "../logger";
 import { BaseController } from "./base";
 
 class CouponController extends BaseController {
 	private logger = _logger.with("[CouponController]");
 
-	async load() {
+	async load(): Promise<{ coupons: CouponData[] }> {
 		try {
-			const res = await this.axiosInstance.get("/load-coupons");
+			const res = await this.axiosInstance.get("/coupons");
 
 			const { coupons } = res.data;
 
@@ -22,6 +23,21 @@ class CouponController extends BaseController {
 
 			return {
 				coupons: []
+			}
+		}
+	}
+
+	async create(coupon: CouponData) {
+		try {
+			await this.axiosInstance.post("/coupon", { ...coupon });
+			this.logger.info(`Added new Coupon`, { ...coupon });
+		} catch (err: any) {
+			this.logger.error("Error while trying to create coupon", {
+				error: err
+			});
+
+			return {
+				message: err.response.data.message || "Internal Application Error"
 			}
 		}
 	}
