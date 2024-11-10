@@ -1,28 +1,24 @@
 import { Input, Button, Spinner } from "@nextui-org/react";
 import { FormEvent, useContext, useState } from "react";
 import { userController } from "../controllers/user";
-import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "react-toastify";
 import Context from "../context/Context";
 import useCustomNavigate from "../utils/useCustomNavigate";
+import { PasswordInput } from "../components/PasswordInput";
+import { couponController } from "../controllers/coupon";
 
 export const Login: React.FC = () => {
-	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { setLogged } = useContext(Context);
+	const { setLogged, setCoupons } = useContext(Context);
 	const navigate = useCustomNavigate();
-
-	const togglePasswordVisibility = () => {
-		setShowPassword((prevState) => !prevState);
-	};
 
 	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault();
 
 		const formData = new FormData(e.target as HTMLFormElement);
 		const username = formData.get("username") as string || "";
-		const password = formData.get("password") as string || "";
+		const password = formData.get("login-password") as string || "";
 
 		setLoading(true);
 
@@ -32,6 +28,12 @@ export const Login: React.FC = () => {
 
 		if (res.success) {
 			toast.success("You have logged in successfully");
+
+			const response = await couponController.load();
+
+			if (response.coupons.length) {
+				setCoupons(response.coupons);
+			}
 			navigate("/");
 		} else {
 			toast.error("Failed: Invalid username or password");
@@ -71,7 +73,8 @@ export const Login: React.FC = () => {
 					/>
 				</section>
 				<section>
-					<label
+					<PasswordInput label="Password" id="login-password" />
+					{/* <label
 						htmlFor="password"
 						className="block text-sm dark:text-[#D1D5DB] font-medium text-gray-700"
 					>
@@ -96,7 +99,7 @@ export const Login: React.FC = () => {
 						>
 							{showPassword ? <EyeClosed /> : <Eye />}
 						</Button>
-					</div>
+					</div> */}
 				</section>
 				<Button
 					type="submit"
