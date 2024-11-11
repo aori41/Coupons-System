@@ -20,6 +20,11 @@ export const Login: React.FC = () => {
 		const username = formData.get("username") as string || "";
 		const password = formData.get("login-password") as string || "";
 
+		if (!username || !password) {
+			toast.error("Failed: Missing login parameters");
+			return;
+		}
+
 		setLoading(true);
 
 		const res = await userController.login(username, password);
