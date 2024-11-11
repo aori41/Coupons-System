@@ -43,10 +43,9 @@ export const UserModal: React.FC<Modal> = ({ button, title, setLoading }) => {
 		if (res.success) {
 			toast.success("User created successfully");
 			return true;
-		} else {
-			toast.error("Failed: " + res.message);
-			return false;
 		}
+		toast.error("Failed: " + res.message);
+		return false;
 	}
 
 	return <>
@@ -55,6 +54,7 @@ export const UserModal: React.FC<Modal> = ({ button, title, setLoading }) => {
 			title={title}
 			onSave={saveUser}
 			resetParams={resetValues}
+			acceptButtonType="save"
 		>
 			<div className="p-4 w-full flex flex-col space-y-4">
 				<section>

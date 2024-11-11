@@ -7,11 +7,12 @@ type ModalProps = {
 	title: string;
 	children: ReactNode;
 	button: ReactNode | string;
+	acceptButtonType: "save" | "accept"
 	onSave?: () => Promise<boolean>;
 	resetParams?: () => void;
 }
 
-export const CustomModal: React.FC<ModalProps> = ({ title, button, onSave, resetParams, children }) => {
+export const CustomModal: React.FC<ModalProps> = ({ title, button, acceptButtonType, onSave, resetParams, children }) => {
 	const { theme } = useContext(Context);
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -44,8 +45,12 @@ export const CustomModal: React.FC<ModalProps> = ({ title, button, onSave, reset
 									}}
 									className={`text-white font-bold ${theme === "dark" ? "bg-blue-600 hover:bg-blue-500" : "bg-blue-500 hover:bg-blue-400"}`}
 								>
-									<Save />
-									Save
+									{acceptButtonType === "save" ? <>
+										<Save />
+										Save
+									</> : <>
+										Accept
+									</>}
 								</Button>}
 							</div>
 						</ModalFooter>

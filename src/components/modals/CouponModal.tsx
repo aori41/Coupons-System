@@ -101,6 +101,7 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 			title={title}
 			onSave={handleSaveCoupon}
 			resetParams={resetValues}
+			acceptButtonType="save"
 		>
 			<div className="p-4 w-full flex flex-wrap space-y-4">
 				<div className="w-full md:w-1/2 space-y-4 pr-2 flex flex-col justify-center">

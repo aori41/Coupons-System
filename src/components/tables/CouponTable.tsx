@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction, useContext } from "react";
-import { Button, Chip, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@nextui-org/react";
+import { Chip, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@nextui-org/react";
 import { Edit, Trash2 } from "lucide-react";
 import { CouponModal } from "../modals/CouponModal";
 import { toast } from "react-toastify";
 import Context, { CouponData } from "../../context/Context";
 import { couponController } from "../../controllers/coupon";
 import { reportController } from "../../controllers/report";
+import { ConfirmModal } from "../modals/ConfirmModal";
 
 const columns = [
 	{ name: "Code", uid: "code" },
@@ -72,9 +73,16 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 						</span>
 					</Tooltip>
 					<Tooltip color="danger" content="Delete coupon">
-						<Button className="text-lg text-red-500 cursor-pointer active:opacity-50" onClick={() => handleDeleteCoupon(coupon)} isIconOnly>
-							<Trash2 size={20} />
-						</Button>
+						<div className="cursor-pointer active:opacity-50">
+							<ConfirmModal
+								button={
+									<span className="text-lg text-red-500 cursor-pointer active:opacity-50">
+										<Trash2 size={20} />
+									</span>
+								}
+								onAccept={() => handleDeleteCoupon(coupon)}
+								title="Are You sure?" />
+						</div>
 					</Tooltip>
 				</div>
 			);
@@ -111,7 +119,7 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 
 	const sortedCoupons = coupons.sort((a, b) => (a.id && b.id ? b.id - a.id : 0));
 
-	return (
+	return <>
 		<Table aria-label="Coupon List" className="h-full" isHeaderSticky>
 			<TableHeader columns={columns}>
 				{(column) => (
@@ -128,5 +136,5 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 				)}
 			</TableBody>
 		</Table>
-	);
+	</>
 }
