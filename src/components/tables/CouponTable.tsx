@@ -1,0 +1,128 @@
+import { Dispatch, SetStateAction, useContext } from "react";
+import { Button, Chip, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@nextui-org/react";
+import { Edit, Trash2 } from "lucide-react";
+import { CouponModal } from "../modals/CouponModal";
+import { toast } from "react-toastify";
+import Context, { CouponData } from "../../context/Context";
+import { couponController } from "../../controllers/coupon";
+
+const columns = [
+	{ name: "Code", uid: "code" },
+	{ name: "Description", uid: "description" },
+	{ name: "Discount", uid: "discountAmount" },
+	{ name: "Expiration Date", uid: "expirationDate" },
+	{ name: "Combine", uid: "canCombine" },
+	{ name: "Limit", uid: "limitUses" },
+	{ name: "Actions", uid: "actions" },
+];
+
+export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean>> }> = ({ setLoading }) => {
+	const { coupons, setCoupons } = useContext(Context);
+
+	const handleDeleteCoupon = async (couponData: CouponData) => {
+		if (!couponData.id) {
+			toast.error("Failed: Invalid Coupon");
+			return false;
+		}
+
+		setLoading(true);
+
+		const res = await couponController.delete(couponData.id);
+
+		setLoading(false);
+
+		if (res?.message) {
+			toast.error("Failed: " + res.message);
+			return false;
+		}
+
+		const couponIndex = coupons.findIndex((coupon) => coupon.id === couponData.id);
+
+		if (couponIndex === -1) {
+			toast.error("Failed: Coupon not found");
+			return false;
+		}
+
+		const newCoupons = coupons.filter((_, index) => index !== couponIndex);
+		setCoupons(newCoupons);
+		return true;
+	}
+
+	const renderCell = (coupon: CouponData, columnKey: string | number) => {
+		if (columnKey === "actions") {
+			return (
+				<div className="relative flex items-center gap-2">
+					<Tooltip content="Edit coupon">
+						<span className="text-lg text-blue-500 cursor-pointer active:opacity-50">
+							<CouponModal
+								title="Edit Coupon"
+								isEdit={true}
+								button={
+									<span className="text-lg text-blue-500 cursor-pointer active:opacity-50">
+										<Edit size={20} />
+									</span>
+								}
+								{...coupon}
+								setLoading={setLoading}
+							/>
+						</span>
+					</Tooltip>
+					<Tooltip color="danger" content="Delete coupon">
+						<Button className="text-lg text-red-500 cursor-pointer active:opacity-50" onClick={() => handleDeleteCoupon(coupon)} isIconOnly>
+							<Trash2 size={20} />
+						</Button>
+					</Tooltip>
+				</div>
+			);
+		}
+
+		const cellValue = coupon[columnKey as keyof CouponData];
+
+		switch (columnKey) {
+			case "discountAmount":
+				return coupon.discountType === "percent"
+					? `${coupon.discountAmount}%`
+					: `${coupon.discountAmount}₪`;
+			case "expirationDate":
+				const dateValue = coupon[columnKey as keyof CouponData];
+
+				if (typeof dateValue === "number") {
+					return (dateValue ? new Date(dateValue).toLocaleDateString("en-GB") : "Not Available");
+				}
+				return "Not Available";
+			case "canCombine":
+				return <>
+					<Chip color={coupon[columnKey as keyof CouponData] ? "success" : "default"} size="sm" variant="flat">
+						{coupon[columnKey as keyof CouponData] ? "Yes" : "No"}
+					</Chip>
+				</>
+			case "limitUses":
+				return <span className="text-lg">{coupon.limitUses <= "0" ? "Unlimited" : coupon.limitUses}</span>
+			case "description":
+				return <div className="max-w-xs truncate">{coupon.description}</div>
+			default:
+				return cellValue;
+		}
+	};
+
+	const sortedCoupons = coupons.sort((a, b) => (a.createdAt && b.createdAt ? b.createdAt - a.createdAt : 0));
+
+	return (
+		<Table aria-label="Coupon List" className="h-full" isHeaderSticky>
+			<TableHeader columns={columns}>
+				{(column) => (
+					<TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+						{column.name}
+					</TableColumn>
+				)}
+			</TableHeader>
+			<TableBody items={sortedCoupons} className="overflow-y-scroll">
+				{(item) => (
+					<TableRow key={item.id}>
+						{(columnKey) => <TableCell style={{ maxWidth: "16px" }}>{renderCell(item, columnKey)}</TableCell>}
+					</TableRow>
+				)}
+			</TableBody>
+		</Table>
+	);
+}
