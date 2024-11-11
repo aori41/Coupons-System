@@ -30,7 +30,6 @@ export const Login: React.FC = () => {
 		const res = await userController.login(username, password);
 
 		if (res.success) {
-
 			const response = await couponController.load();
 
 			if (response.coupons.length) {
