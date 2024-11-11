@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { CouponData } from "../../context/Context";
+import { useContext, useState } from "react";
 import { Modal } from "./types";
 import { toast } from "react-toastify";
 import { CustomModal } from "./CustomModal";
@@ -7,6 +6,7 @@ import { Button, Input, RadioGroup, Textarea } from "@nextui-org/react";
 import { RefreshCcw } from "lucide-react";
 import { ColoredRadio } from "../ColoredRadio";
 import { couponController } from "../../controllers/coupon";
+import Context, { CouponData } from "../../context/Context";
 
 const formatDateForInput = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -21,6 +21,8 @@ const formatDateForInput = (timestamp: number) => {
 };
 
 export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, setLoading }) => {
+	const { username, setCoupons } = useContext(Context);
+
 	const [couponData, setCouponData] = useState<CouponData>({
 		code,
 		description,
@@ -58,6 +60,8 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, di
 			toast.error("Failed: " + res.message);
 			return false;
 		}
+
+		setCoupons((prevCoupons) => ([...prevCoupons, { ...couponData, createdAt: Date.now(), createdBy: username }]))
 		toast.success("Saved the coupon successfully");
 		return true;
 	}

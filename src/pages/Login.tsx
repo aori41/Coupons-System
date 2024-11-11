@@ -10,7 +10,7 @@ import Context from "../context/Context";
 export const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { setLogged, setCoupons } = useContext(Context);
+	const { setLogged, setUsername, setCoupons } = useContext(Context);
 	const navigate = useCustomNavigate();
 
 	const handleLogin = async (e: FormEvent) => {
@@ -33,6 +33,7 @@ export const Login: React.FC = () => {
 			}
 			navigate("/");
 
+			setUsername(username);
 			setLogged(res.success);
 			toast.success("You have logged in successfully");
 		} else {

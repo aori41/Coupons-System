@@ -10,13 +10,14 @@ import Context from "./context/Context";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { theme, logged, setLogged } = useContext(Context);
+  const { theme, logged, setLogged, setUsername } = useContext(Context);
 
   useEffect(() => {
     const init = async () => {
       const res = await userController.status();
 
       setLogged(res.status);
+      setUsername(res.username || "");
     }
 
     init();
@@ -27,7 +28,7 @@ function App() {
       <header>
         <NavBar />
       </header>
-      <main>
+      <main className="h-[90%] w-full flex">
         <Switch>
           {routesHandler.map((route, index) => (
             <Route key={index} path={route.link} component={route.loginNeeded && !logged ? NotFound : route.component} />

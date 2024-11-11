@@ -29,7 +29,7 @@ const clearAuthCookies = () => {
 };
 
 export const NavBar: React.FC = () => {
-	const { theme, setTheme, logged, setLogged } = useContext(Context);
+	const { theme, setTheme, logged, setLogged, setUsername } = useContext(Context);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 
 	const navigate = useCustomNavigate();
@@ -40,6 +40,7 @@ export const NavBar: React.FC = () => {
 
 	const handleLogout = () => {
 		setLogged(false);
+		setUsername("");
 		clearAuthCookies();
 		navigate("/");
 	}

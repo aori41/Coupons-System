@@ -64,18 +64,19 @@ class UserController extends BaseController {
 		}
 	}
 
-	async status(): Promise<{ status: boolean; }> {
+	async status(): Promise<{ status: boolean; username?: string; }> {
 		try {
 			const res = await this.axiosInstance.get("/status");
 
-			const { status } = res.data;
+			const { status, username } = res.data;
 
 			this.logger.info(`User is Logged ${status ? "In" : "Out"}`, {
 				status
 			});
 
 			return {
-				status
+				status,
+				username
 			}
 		} catch (err: any) {
 			this.logger.error("Error while trying to get user status", {
