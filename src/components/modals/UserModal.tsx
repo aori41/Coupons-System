@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Modal } from "./types";
 import { toast } from "react-toastify";
 import { userController } from "../../controllers/user";
 import { CustomModal } from "./CustomModal";
 import { Input } from "@nextui-org/react";
 import { PasswordInput } from "../PasswordInput";
+import Context from "../../context/Context";
 
 type UserData = {
 	username: string;
@@ -18,6 +19,8 @@ export const UserModal: React.FC<Modal> = ({ button, title, setLoading }) => {
 		password: "",
 		confirmPassword: "",
 	});
+
+	const { users, setUsers } = useContext(Context);
 
 	const resetValues = () => {
 		setUserData({ username: "", password: "", confirmPassword: "" });
@@ -42,6 +45,7 @@ export const UserModal: React.FC<Modal> = ({ button, title, setLoading }) => {
 
 		if (res.success) {
 			toast.success("User created successfully");
+			setUsers([...users, userData.username]);
 			return true;
 		}
 		toast.error("Failed: " + res.message);

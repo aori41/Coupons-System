@@ -11,7 +11,7 @@ import Context from "../context/Context";
 export const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { setLogged, setUsername, setCoupons, setReports } = useContext(Context);
+	const { setLogged, setUsername, setCoupons, setReports, setUsers } = useContext(Context);
 	const navigate = useCustomNavigate();
 
 	const handleLogin = async (e: FormEvent) => {
@@ -33,7 +33,9 @@ export const Login: React.FC = () => {
 		if (res.success) {
 			const couponResponse = await couponController.load();
 			const reportResponse = await reportController.load();
+			const userResponse = await userController.load();
 
+			setUsers(userResponse.users);
 			setCoupons(couponResponse.coupons);
 			setReports(reportResponse.reports);
 			navigate("/");

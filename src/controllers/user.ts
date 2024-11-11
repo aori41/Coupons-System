@@ -4,6 +4,28 @@ import { BaseController } from "./base";
 class UserController extends BaseController {
 	private logger = _logger.with("[UserController]");
 
+	async load(): Promise<{ users: string[] }> {
+		try {
+			const res = await this.axiosInstance.get("/users");
+
+			const { users } = res.data;
+
+			this.logger.info(`Loaded Admin List from the server`, { users });
+
+			return {
+				users
+			}
+		} catch (err: any) {
+			this.logger.error("Error while trying to load admins", {
+				error: err
+			});
+
+			return {
+				users: []
+			}
+		}
+	}
+
 	async login(username: string, password: string): Promise<{ success: boolean; message: string; }> {
 		try {
 			const res = await this.axiosInstance.post("/login", {

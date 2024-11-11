@@ -10,25 +10,37 @@ const users = [defaultAdmin];
 
 class UserMock implements MockRule {
 	register(mock: MockAdapter) {
+		mock.onGet("/users").reply(() => {
+			const usernames = users.map(user => user.username);
+
+			return [
+				200,
+				{
+					users: usernames
+				}
+			];
+		});
+
+
 		mock.onPost("/login").reply((config) => {
 			const data = JSON.parse(config.data);
 
 			const user = users.find(user => user.username === data.username);
 
-			if (user) {
+			if (!user || (user && user.password !== data.password)) {
 				return [
-					200,
+					401,
 					{
-						success: true,
+						success: false,
+						message: "Invalid username or password",
 					},
 				];
 			}
 
 			return [
-				401,
+				200,
 				{
-					success: false,
-					message: "Invalid username or password",
+					success: true,
 				},
 			];
 		})

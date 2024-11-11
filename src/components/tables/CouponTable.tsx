@@ -19,7 +19,7 @@ const columns = [
 ];
 
 export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean>> }> = ({ setLoading }) => {
-	const { coupons, setCoupons, username } = useContext(Context);
+	const { coupons, setCoupons, username, reports, setReports } = useContext(Context);
 
 	const handleDeleteCoupon = async (couponData: CouponData) => {
 		if (!couponData.id) {
@@ -51,6 +51,9 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 		toast.success("Deleted Coupon Successfully");
 		const newCoupons = coupons.filter((_, index) => index !== couponIndex);
 		setCoupons(newCoupons);
+
+		const newReports = reports.map(report => report.couponId === couponData.id ? { ...report, deletedBy: username } : report);
+		setReports(newReports);
 		return true;
 	}
 

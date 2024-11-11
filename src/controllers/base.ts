@@ -13,7 +13,7 @@ export class BaseController {
 
 	constructor() {
 		if (import.meta.env.VITE_MOCK_DATA) {
-			this.mock = new MockAdapter(this.axiosInstance, { delayResponse: 750 });
+			this.mock = new MockAdapter(this.axiosInstance, { delayResponse: 600 });
 			userMock.register(this.mock);
 			couponMock.register(this.mock);
 			reportMock.register(this.mock);

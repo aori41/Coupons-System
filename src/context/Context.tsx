@@ -33,6 +33,8 @@ type ContextType = {
 	setCoupons: React.Dispatch<React.SetStateAction<CouponData[]>>;
 	reports: ReportData[];
 	setReports: React.Dispatch<React.SetStateAction<ReportData[]>>;
+	users: string[];
+	setUsers: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const defaultValues = {
@@ -46,6 +48,8 @@ const defaultValues = {
 	setCoupons: () => { },
 	reports: [],
 	setReports: () => { },
+	users: [],
+	setUsers: () => { },
 }
 
 const Context = createContext<ContextType>(defaultValues);
@@ -60,13 +64,14 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 	const [theme, setTheme] = useState<"light" | "dark">(defaultValues.theme);
 	const [coupons, setCoupons] = useState<CouponData[]>([]);
 	const [reports, setReports] = useState<ReportData[]>([]);
+	const [users, setUsers] = useState<string[]>([]);
 
 	useEffect(() => {
 		localStorage.setItem("theme", theme);
 	}, [theme]);
 
 	return <>
-		<Context.Provider value={{ logged, setLogged, username, setUsername, theme, setTheme, coupons, setCoupons, reports, setReports }}>
+		<Context.Provider value={{ logged, setLogged, username, setUsername, theme, setTheme, coupons, setCoupons, reports, setReports, users, setUsers }}>
 			{children}
 		</Context.Provider>
 	</>
