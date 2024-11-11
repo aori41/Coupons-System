@@ -13,7 +13,9 @@ class UserMock implements MockRule {
 		mock.onPost("/login").reply((config) => {
 			const data = JSON.parse(config.data);
 
-			if (data.username === defaultAdmin.username && data.password === defaultAdmin.password) {
+			const user = users.find(user => user.username === data.username);
+
+			if (user) {
 				return [
 					200,
 					{
@@ -46,6 +48,7 @@ class UserMock implements MockRule {
 				];
 			}
 
+			users.push({ username: data.username, password: data.password });
 			return [
 				200,
 				{

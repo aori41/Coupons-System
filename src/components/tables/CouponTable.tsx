@@ -48,6 +48,7 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 			return false;
 		}
 
+		toast.success("Deleted Coupon Successfully");
 		const newCoupons = coupons.filter((_, index) => index !== couponIndex);
 		setCoupons(newCoupons);
 		return true;
