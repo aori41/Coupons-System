@@ -5,12 +5,13 @@ import { toast } from "react-toastify";
 import { PasswordInput } from "../components/PasswordInput";
 import { couponController } from "../controllers/coupon";
 import useCustomNavigate from "../utils/useCustomNavigate";
+import { reportController } from "../controllers/report";
 import Context from "../context/Context";
 
 export const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { setLogged, setUsername, setCoupons } = useContext(Context);
+	const { setLogged, setUsername, setCoupons, setReports } = useContext(Context);
 	const navigate = useCustomNavigate();
 
 	const handleLogin = async (e: FormEvent) => {
@@ -30,11 +31,11 @@ export const Login: React.FC = () => {
 		const res = await userController.login(username, password);
 
 		if (res.success) {
-			const response = await couponController.load();
+			const couponResponse = await couponController.load();
+			const reportResponse = await reportController.load();
 
-			if (response.coupons.length) {
-				setCoupons(response.coupons);
-			}
+			setCoupons(couponResponse.coupons);
+			setReports(reportResponse.reports);
 			navigate("/");
 
 			setUsername(username);
