@@ -5,6 +5,7 @@ import { CouponModal } from "../modals/CouponModal";
 import { toast } from "react-toastify";
 import Context, { CouponData } from "../../context/Context";
 import { couponController } from "../../controllers/coupon";
+import { reportController } from "../../controllers/report";
 
 const columns = [
 	{ name: "Code", uid: "code" },
@@ -17,7 +18,7 @@ const columns = [
 ];
 
 export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean>> }> = ({ setLoading }) => {
-	const { coupons, setCoupons } = useContext(Context);
+	const { coupons, setCoupons, username } = useContext(Context);
 
 	const handleDeleteCoupon = async (couponData: CouponData) => {
 		if (!couponData.id) {
@@ -27,14 +28,17 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 
 		setLoading(true);
 
-		const res = await couponController.delete(couponData.id);
+		const couponRes = await couponController.delete(couponData.id);
 
-		setLoading(false);
-
-		if (res?.message) {
-			toast.error("Failed: " + res.message);
+		if (couponRes?.message) {
+			toast.error("Failed: " + couponRes.message);
+			setLoading(false);
 			return false;
 		}
+
+		await reportController.edit({ deletedBy: username, couponId: couponData.id });
+
+		setLoading(false);
 
 		const couponIndex = coupons.findIndex((coupon) => coupon.id === couponData.id);
 
@@ -105,7 +109,7 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 		}
 	};
 
-	const sortedCoupons = coupons.sort((a, b) => (a.createdAt && b.createdAt ? b.createdAt - a.createdAt : 0));
+	const sortedCoupons = coupons.sort((a, b) => (a.id && b.id ? b.id - a.id : 0));
 
 	return (
 		<Table aria-label="Coupon List" className="h-full" isHeaderSticky>

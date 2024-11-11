@@ -7,6 +7,7 @@ import { RefreshCcw } from "lucide-react";
 import { ColoredRadio } from "../ColoredRadio";
 import { couponController } from "../../controllers/coupon";
 import Context, { CouponData } from "../../context/Context";
+import { reportController } from "../../controllers/report";
 
 const formatDateForInput = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -20,13 +21,11 @@ const formatDateForInput = (timestamp: number) => {
 	return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdit, id, code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, createdBy, createdAt, setLoading }) => {
-	const { coupons, setCoupons, username } = useContext(Context);
+export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdit, id, code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, setLoading }) => {
+	const { coupons, setCoupons, reports, setReports, username } = useContext(Context);
 
 	const [couponData, setCouponData] = useState<CouponData>({
 		id,
-		createdBy,
-		createdAt,
 		code,
 		description,
 		discountType,
@@ -39,8 +38,6 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 	const resetValues = () => {
 		setCouponData({
 			id,
-			createdBy,
-			createdAt,
 			code,
 			description,
 			discountType,
@@ -58,28 +55,36 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 		}
 		setLoading(true);
 
-		const data = { ...couponData, id: Date.now(), createdAt: Date.now(), lastModified: Date.now(), lastModifiedBy: username, createdBy: username };
+		const id = Date.now();
+		const reportData = { lastModified: Date.now(), lastModifiedBy: username, couponId: couponData.id || id };
 
-		let res;
+		let couponRes;
+		let reportRes;
 
 		if (isEdit) {
-			res = await couponController.edit({ ...couponData, lastModified: Date.now() });
+			couponRes = await couponController.edit({ ...couponData });
+			reportRes = await reportController.edit({ ...reportData });
 		} else {
-			res = await couponController.create(data);
+			couponRes = await couponController.create({ ...couponData, id });
+			reportRes = await reportController.create({ ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 });
 		}
 
 		setLoading(false);
 
-		if (res?.message) {
-			toast.error("Failed: " + res.message);
+		if (couponRes?.message) {
+			toast.error("Failed: " + couponRes.message);
 			return false;
 		}
 
 		if (isEdit) {
-			const updatedCoupons = coupons.map((coupon) => coupon.id === couponData.id ? { ...coupon, ...couponData, lastModified: Date.now(), lastModifiedBy: username } : coupon);
+			const updatedCoupons = coupons.map((coupon) => coupon.id === couponData.id ? { ...coupon, ...couponData } : coupon);
 			setCoupons(updatedCoupons);
+
+			const updatedReports = reports.map((report) => report.couponId === couponData.id ? { ...report, ...reportData } : report);
+			setReports(updatedReports);
 		} else {
-			setCoupons([...coupons, { ...data }]);
+			setCoupons([...coupons, { ...couponData, id }]);
+			setReports([...reports, { ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 }]);
 		}
 		toast.success("Saved the coupon successfully");
 		return true;

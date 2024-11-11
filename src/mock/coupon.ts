@@ -5,8 +5,6 @@ import MockAdapter from "axios-mock-adapter";
 const coupons: CouponData[] = [
 	{
 		id: 1,
-		createdBy: "admin",
-		createdAt: Date.now() - 100000000,
 		code: "WELCOME24",
 		canCombine: false,
 		discountAmount: 30,
@@ -16,8 +14,6 @@ const coupons: CouponData[] = [
 	},
 	{
 		id: 2,
-		createdBy: "admin",
-		createdAt: Date.now() - 100,
 		code: "WELCOME25",
 		canCombine: true,
 		discountAmount: 55,
@@ -27,8 +23,6 @@ const coupons: CouponData[] = [
 	},
 	{
 		id: 3,
-		createdBy: "admin",
-		createdAt: Date.now() - 6000,
 		code: "WELCOME26",
 		canCombine: true,
 		discountAmount: 15,
@@ -38,8 +32,6 @@ const coupons: CouponData[] = [
 	},
 	{
 		id: 4,
-		createdBy: "admin",
-		createdAt: Date.now() - 1000000000,
 		code: "WELCOME27",
 		canCombine: true,
 		discountAmount: 22,
@@ -49,8 +41,6 @@ const coupons: CouponData[] = [
 	},
 	{
 		id: 5,
-		createdBy: "admin",
-		createdAt: Date.now() - 10000000000,
 		code: "WELCOME28",
 		canCombine: true,
 		discountAmount: 30,
@@ -83,6 +73,7 @@ class CouponMock implements MockRule {
 					}
 				];
 			}
+			coupons.push(data);
 			return [200, {}];
 		});
 

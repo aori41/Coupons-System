@@ -1,7 +1,8 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { userMock } from "../mock/user";
-import { couponMock } from "../mock/coupons";
+import { couponMock } from "../mock/coupon";
+import { reportMock } from "../mock/report";
 
 export class BaseController {
 	protected mock?: MockAdapter;
@@ -12,9 +13,10 @@ export class BaseController {
 
 	constructor() {
 		if (import.meta.env.VITE_MOCK_DATA) {
-			this.mock = new MockAdapter(this.axiosInstance, { delayResponse: 1000 });
+			this.mock = new MockAdapter(this.axiosInstance, { delayResponse: 750 });
 			userMock.register(this.mock);
 			couponMock.register(this.mock);
+			reportMock.register(this.mock);
 		}
 	}
 }

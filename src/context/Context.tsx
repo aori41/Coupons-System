@@ -2,10 +2,6 @@ import { createContext, useState, ReactNode, useEffect } from "react";
 
 export type CouponData = {
 	id?: number;
-	createdBy?: string;
-	createdAt?: number;
-	lastModified?: number;
-	lastModifiedBy?: string;
 	code: string;
 	description: string;
 	discountType: "percent" | "ils";
@@ -13,6 +9,17 @@ export type CouponData = {
 	expirationDate?: number;
 	canCombine: boolean;
 	limitUses: string;
+}
+
+export type ReportData = {
+	couponId: number;
+	couponCode: string;
+	createdBy: string;
+	createdAt: number;
+	lastModified: number;
+	lastModifiedBy: string;
+	deletedBy?: string;
+	uses: number;
 }
 
 type ContextType = {
@@ -24,6 +31,8 @@ type ContextType = {
 	setTheme: React.Dispatch<React.SetStateAction<"light" | "dark">>;
 	coupons: CouponData[];
 	setCoupons: React.Dispatch<React.SetStateAction<CouponData[]>>;
+	reports: ReportData[];
+	setReports: React.Dispatch<React.SetStateAction<ReportData[]>>;
 }
 
 const defaultValues = {
@@ -35,6 +44,8 @@ const defaultValues = {
 	setTheme: () => { },
 	coupons: [],
 	setCoupons: () => { },
+	reports: [],
+	setReports: () => { },
 }
 
 const Context = createContext<ContextType>(defaultValues);
@@ -48,13 +59,14 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 	const [username, setUsername] = useState<string>(defaultValues.username);
 	const [theme, setTheme] = useState<"light" | "dark">(defaultValues.theme);
 	const [coupons, setCoupons] = useState<CouponData[]>([]);
+	const [reports, setReports] = useState<ReportData[]>([]);
 
 	useEffect(() => {
 		localStorage.setItem("theme", theme);
 	}, [theme]);
 
 	return <>
-		<Context.Provider value={{ logged, setLogged, username, setUsername, theme, setTheme, coupons, setCoupons }}>
+		<Context.Provider value={{ logged, setLogged, username, setUsername, theme, setTheme, coupons, setCoupons, reports, setReports }}>
 			{children}
 		</Context.Provider>
 	</>
