@@ -20,10 +20,13 @@ const formatDateForInput = (timestamp: number) => {
 	return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, setLoading }) => {
-	const { username, setCoupons } = useContext(Context);
+export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdit, id, code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, createdBy, createdAt, setLoading }) => {
+	const { coupons, setCoupons, username } = useContext(Context);
 
 	const [couponData, setCouponData] = useState<CouponData>({
+		id,
+		createdBy,
+		createdAt,
 		code,
 		description,
 		discountType,
@@ -35,6 +38,9 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, di
 
 	const resetValues = () => {
 		setCouponData({
+			id,
+			createdBy,
+			createdAt,
 			code,
 			description,
 			discountType,
@@ -45,14 +51,22 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, di
 		})
 	}
 
-	const handleCreateCoupon = async () => {
+	const handleSaveCoupon = async () => {
 		if (!couponData.code || !couponData.discountAmount) {
 			toast.error("Failed: Code and Discount amount are required");
 			return false;
 		}
 		setLoading(true);
 
-		const res = await couponController.create(couponData);
+		const data = { ...couponData, id: Date.now(), createdAt: Date.now(), lastModified: Date.now(), lastModifiedBy: username, createdBy: username };
+
+		let res;
+
+		if (isEdit) {
+			res = await couponController.edit({ ...couponData, lastModified: Date.now() });
+		} else {
+			res = await couponController.create(data);
+		}
 
 		setLoading(false);
 
@@ -61,7 +75,12 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, di
 			return false;
 		}
 
-		setCoupons((prevCoupons) => ([...prevCoupons, { ...couponData, createdAt: Date.now(), createdBy: username }]))
+		if (isEdit) {
+			const updatedCoupons = coupons.map((coupon) => coupon.id === couponData.id ? { ...coupon, ...couponData, lastModified: Date.now(), lastModifiedBy: username } : coupon);
+			setCoupons(updatedCoupons);
+		} else {
+			setCoupons([...coupons, { ...data }]);
+		}
 		toast.success("Saved the coupon successfully");
 		return true;
 	}
@@ -73,9 +92,9 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ code, canCombine, di
 
 	return <>
 		<CustomModal
-			buttonText="Create Coupon"
-			title="Create Coupon"
-			onSave={handleCreateCoupon}
+			button={button}
+			title={title}
+			onSave={handleSaveCoupon}
 			resetParams={resetValues}
 		>
 			<div className="p-4 w-full flex flex-wrap space-y-4">

@@ -12,7 +12,7 @@ type UserData = {
 	confirmPassword: string;
 }
 
-export const UserModal: React.FC<Modal> = ({ setLoading }) => {
+export const UserModal: React.FC<Modal> = ({ button, title, setLoading }) => {
 	const [userData, setUserData] = useState<UserData>({
 		username: "",
 		password: "",
@@ -51,8 +51,8 @@ export const UserModal: React.FC<Modal> = ({ setLoading }) => {
 
 	return <>
 		<CustomModal
-			buttonText="Create New User"
-			title="Create User"
+			button={button}
+			title={title}
 			onSave={saveUser}
 			resetParams={resetValues}
 		>

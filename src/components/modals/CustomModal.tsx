@@ -6,17 +6,17 @@ import Context from "../../context/Context";
 type ModalProps = {
 	title: string;
 	children: ReactNode;
-	buttonText: string;
+	button: ReactNode | string;
 	onSave?: () => Promise<boolean>;
 	resetParams?: () => void;
 }
 
-export const CustomModal: React.FC<ModalProps> = ({ title, buttonText, onSave, resetParams, children }) => {
+export const CustomModal: React.FC<ModalProps> = ({ title, button, onSave, resetParams, children }) => {
 	const { theme } = useContext(Context);
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return <>
-		<Button onPress={onOpen}>{buttonText}</Button>
+		<Button onPress={onOpen} isIconOnly={(typeof button) !== "string"}>{button}</Button>
 		<Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={resetParams} isDismissable={false} isKeyboardDismissDisabled={true} className={`${theme === "dark" && "bg-[#111827] text-white"} min-w-max`}>
 			<ModalContent>
 				{(onClose) => (

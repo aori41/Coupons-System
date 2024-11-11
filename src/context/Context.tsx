@@ -1,8 +1,11 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 
 export type CouponData = {
+	id?: number;
 	createdBy?: string;
 	createdAt?: number;
+	lastModified?: number;
+	lastModifiedBy?: string;
 	code: string;
 	description: string;
 	discountType: "percent" | "ils";
