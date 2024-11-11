@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Spinner } from "@nextui-org/react";
 import { CouponModal } from "../components/modals/CouponModal";
 import { CouponTable } from "../components/tables/CouponTable";
+import { ReportTable } from "../components/tables/ReportTable";
 
 export const Panel: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -23,8 +24,11 @@ export const Panel: React.FC = () => {
 					</div>
 					<CouponTable setLoading={setLoading} />
 				</section>
-				<section className="flex flex-col w-full h-[48%] p-4">
-					<h2 className="font-bold text-xl">Reports</h2>
+				<section className="flex relative flex-col w-full h-[48%] p-4 gap-y-1">
+					<div className="flex justify-between items-center">
+						<h2 className="font-bold text-xl">Reports</h2>
+					</div>
+					<ReportTable setLoading={setLoading} />
 				</section>
 			</div>
 		</article>
