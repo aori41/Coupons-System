@@ -47,9 +47,9 @@ export const CustomModal: React.FC<ModalProps> = ({ title, button, acceptButtonT
 								>
 									{acceptButtonType === "save" ? <>
 										<Save />
-										Save
+										<span>Save</span>
 									</> : <>
-										Accept
+										<span>Accept</span>
 									</>}
 								</Button>}
 							</div>

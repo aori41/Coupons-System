@@ -6,7 +6,6 @@ export const ConfirmModal: React.FC<Partial<Modal> & { onAccept: () => Promise<b
 		<CustomModal
 			button={button}
 			title={title as string}
-
 			onSave={onAccept}
 			acceptButtonType="accept"
 		>

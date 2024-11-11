@@ -59,14 +59,13 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 		const reportData = { lastModified: Date.now(), lastModifiedBy: username, couponId: couponData.id || id };
 
 		let couponRes;
-		let reportRes;
 
 		if (isEdit) {
 			couponRes = await couponController.edit({ ...couponData });
-			reportRes = await reportController.edit({ ...reportData });
+			await reportController.edit({ ...reportData });
 		} else {
 			couponRes = await couponController.create({ ...couponData, id });
-			reportRes = await reportController.create({ ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 });
+			await reportController.create({ ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 });
 		}
 
 		setLoading(false);
