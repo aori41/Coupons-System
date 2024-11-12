@@ -10,7 +10,7 @@ const coupons: CouponData[] = [
 		discountAmount: 30,
 		discountType: "percent",
 		description: "This coupon was created by mock data",
-		limitUses: "0",
+		limitUses: 0,
 	},
 	{
 		id: 2,
@@ -19,7 +19,7 @@ const coupons: CouponData[] = [
 		discountAmount: 55,
 		discountType: "ils",
 		description: "This coupon was created by mock data",
-		limitUses: "24",
+		limitUses: 24,
 	},
 	{
 		id: 3,
@@ -28,7 +28,7 @@ const coupons: CouponData[] = [
 		discountAmount: 15,
 		discountType: "percent",
 		description: "This coupon was created by mock data",
-		limitUses: "0",
+		limitUses: 0,
 	},
 	{
 		id: 4,
@@ -37,7 +37,7 @@ const coupons: CouponData[] = [
 		discountAmount: 22,
 		discountType: "ils",
 		description: "This coupon was created by mock data",
-		limitUses: "0",
+		limitUses: 0,
 	},
 	{
 		id: 5,
@@ -46,7 +46,7 @@ const coupons: CouponData[] = [
 		discountAmount: 30,
 		discountType: "ils",
 		description: "This coupon was created by mock data",
-		limitUses: "0",
+		limitUses: 0,
 	},
 ];
 

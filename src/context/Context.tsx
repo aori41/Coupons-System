@@ -11,7 +11,7 @@ export type CouponData = {
 	description: string;
 	expirationDate?: number;
 	canCombine: boolean;
-	limitUses: string;
+	limitUses?: number;
 } & AppliedCoupon
 
 export type ReportData = {

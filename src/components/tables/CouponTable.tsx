@@ -113,7 +113,7 @@ export const CouponTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 					</Chip>
 				</>
 			case "limitUses":
-				return <span className="text-lg">{coupon.limitUses <= "0" ? "Unlimited" : coupon.limitUses}</span>
+				return <span className="text-lg">{!coupon.limitUses || coupon.limitUses <= 0 ? "Unlimited" : coupon.limitUses}</span>
 			case "description":
 				return <div className="max-w-xs truncate">{coupon.description}</div>
 			default:

@@ -24,6 +24,7 @@ const formatDateForInput = (timestamp: number) => {
 export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdit, id, code, canCombine, discountType, discountAmount, description, limitUses, expirationDate, setLoading }) => {
 	const { coupons, setCoupons, reports, setReports, username } = useContext(Context);
 
+	const [isLimit, setIsLimit] = useState<boolean>(!!(limitUses && limitUses > 0));
 	const [couponData, setCouponData] = useState<CouponData>({
 		id,
 		code,
@@ -185,10 +186,11 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 						<legend className="sr-only">Usage Limit</legend>
 						<RadioGroup
 							label="Usage Limit"
-							value={couponData.limitUses <= "0" && couponData.limitUses !== "" ? "unlimited" : "limited"}
+							value={!isLimit ? "unlimited" : "limited"}
 							orientation="horizontal"
 							onChange={(e) => {
-								setCouponData({ ...couponData, limitUses: e.target.value === "unlimited" ? "0" : "1" });
+								setIsLimit(!isLimit);
+								setCouponData({ ...couponData, limitUses: e.target.value === "unlimited" ? undefined : 1 });
 							}}
 						>
 							<ColoredRadio value="unlimited" label="No Limit" />
@@ -201,10 +203,10 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 						type="number"
 						label="Limit Uses"
 						fullWidth
-						isDisabled={couponData.limitUses <= "0" && couponData.limitUses !== ""}
+						isDisabled={!isLimit}
 						min={1}
-						value={couponData.limitUses}
-						onChange={(e) => setCouponData({ ...couponData, limitUses: e.target.value })}
+						value={`${couponData.limitUses || ""}`}
+						onChange={(e) => setCouponData({ ...couponData, limitUses: +e.target.value })}
 					/>
 				</div>
 				<div className="w-full space-y-4">

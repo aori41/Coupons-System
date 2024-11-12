@@ -20,7 +20,7 @@ export const Panel: React.FC = () => {
 				<section className="flex flex-col w-full h-[48%] p-4 gap-y-1">
 					<div className="flex justify-between items-center">
 						<h2 className="font-bold text-xl">Active Coupons</h2>
-						<CouponModal button="Create Coupon" title="Create Coupon" isEdit={false} canCombine={false} code="" description="" discountAmount={1} discountType="percent" limitUses="0" setLoading={setLoading} />
+						<CouponModal button="Create Coupon" title="Create Coupon" isEdit={false} canCombine={false} code="" description="" discountAmount={1} discountType="percent" limitUses={0} setLoading={setLoading} />
 					</div>
 					<CouponTable setLoading={setLoading} />
 				</section>
