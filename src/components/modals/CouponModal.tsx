@@ -6,8 +6,8 @@ import { Button, Input, RadioGroup, Textarea } from "@nextui-org/react";
 import { RefreshCcw } from "lucide-react";
 import { ColoredRadio } from "../ColoredRadio";
 import { couponController } from "../../controllers/coupon";
-import Context, { CouponData } from "../../context/Context";
 import { reportController } from "../../controllers/report";
+import Context, { CouponData } from "../../context/Context";
 
 const formatDateForInput = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -65,7 +65,7 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 			couponRes = await couponController.edit({ ...couponData });
 			await reportController.edit({ ...reportData });
 		} else {
-			couponRes = await couponController.create({ ...couponData, id });
+			couponRes = await couponController.create({ ...couponData, id, uses: 0 });
 			await reportController.create({ ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 });
 		}
 
@@ -83,7 +83,7 @@ export const CouponModal: React.FC<CouponData & Modal> = ({ button, title, isEdi
 			const updatedReports = reports.map((report) => report.couponId === couponData.id ? { ...report, ...reportData } : report);
 			setReports(updatedReports);
 		} else {
-			setCoupons([...coupons, { ...couponData, id }]);
+			setCoupons([...coupons, { ...couponData, id, uses: 0 }]);
 			setReports([...reports, { ...reportData, createdBy: username, couponId: id, couponCode: couponData.code, createdAt: Date.now(), uses: 0 }]);
 		}
 		toast.success("Saved the coupon successfully");

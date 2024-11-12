@@ -103,6 +103,17 @@ class CouponMock implements MockRule {
 				];
 			}
 
+			if (coupons[couponIndex].limitUses !== undefined && coupons[couponIndex].uses !== undefined) {
+				if (coupons[couponIndex].uses >= coupons[couponIndex].limitUses) {
+					return [
+						400,
+						{
+							message: "Coupon is not available"
+						}
+					];
+				}
+			}
+
 			const cantCombine = appliedCoupons.find((coupon: CouponData) => !coupon.canCombine);
 			if (cantCombine) {
 				return [
@@ -148,6 +159,32 @@ class CouponMock implements MockRule {
 			}
 
 			coupons[couponIndex] = { ...coupons[couponIndex], ...data };
+			return [200, {}];
+		});
+
+		mock.onPut("/coupons").reply((config) => {
+			const data = JSON.parse(config.data);
+
+			const errors: string[] = [];
+			data.coupons.forEach((coupon: CouponData) => {
+				const couponIndex = coupons.findIndex((existingCoupon) => existingCoupon.id === coupon.id);
+
+				if (couponIndex === -1) {
+					errors.push(`Coupon with id ${coupon.id} not found`);
+				} else {
+					const { uses } = coupons[couponIndex]
+					coupons[couponIndex] = { ...coupons[couponIndex], uses: (uses ? uses + 1 : 1) };
+				}
+			});
+
+			if (errors.length > 0) {
+				return [
+					404,
+					{
+						message: errors.join(", ")
+					}
+				];
+			}
 			return [200, {}];
 		});
 

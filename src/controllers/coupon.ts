@@ -85,6 +85,21 @@ class CouponController extends BaseController {
 		}
 	}
 
+	async updateUsage(coupons: CouponData[]): Promise<{ message: string; } | undefined> {
+		try {
+			await this.axiosInstance.put("/coupons", { coupons });
+			this.logger.info(`Edited Coupons`, { coupons });
+		} catch (err: any) {
+			this.logger.error("Error while trying to edit coupons", {
+				error: err
+			});
+
+			return {
+				message: err.response.data.message || "Internal Application Error"
+			}
+		}
+	}
+
 	async delete(id: number): Promise<{ message: string; } | undefined> {
 		try {
 			await this.axiosInstance.delete(`/coupon/${id}`);

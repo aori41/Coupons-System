@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import Context from "../context/Context";
 
 export const Home: React.FC = () => {
-	const { appliedCoupons, setAppliedCoupons, reports, setReports } = useContext(Context);
+	const { appliedCoupons, setAppliedCoupons, reports, setReports, coupons } = useContext(Context);
 
 	const [couponCode, setCouponCode] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
@@ -74,6 +74,9 @@ export const Home: React.FC = () => {
 
 		setLoading(true);
 
+		const editCoupons = coupons.filter(coupon => codes.includes(coupon.code));
+		await couponController.updateUsage(editCoupons);
+
 		const res = await reportController.updateUsage(codes);
 
 		setLoading(false);
@@ -90,6 +93,7 @@ export const Home: React.FC = () => {
 			}
 		});
 		setReports(updatedReports);
+		setAppliedCoupons([]);
 		toast.success("Order finished successfully");
 	}
 
