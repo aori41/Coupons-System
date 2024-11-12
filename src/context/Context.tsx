@@ -1,15 +1,18 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 
+type AppliedCoupon = {
+	code: string;
+	discountAmount: number;
+	discountType: "percent" | "ils"
+}
+
 export type CouponData = {
 	id?: number;
-	code: string;
 	description: string;
-	discountType: "percent" | "ils";
-	discountAmount: number;
 	expirationDate?: number;
 	canCombine: boolean;
 	limitUses: string;
-}
+} & AppliedCoupon
 
 export type ReportData = {
 	couponId: number;
@@ -35,6 +38,8 @@ type ContextType = {
 	setReports: React.Dispatch<React.SetStateAction<ReportData[]>>;
 	users: string[];
 	setUsers: React.Dispatch<React.SetStateAction<string[]>>;
+	appliedCoupons: AppliedCoupon[];
+	setAppliedCoupons: React.Dispatch<React.SetStateAction<AppliedCoupon[]>>;
 }
 
 const defaultValues = {
@@ -50,6 +55,8 @@ const defaultValues = {
 	setReports: () => { },
 	users: [],
 	setUsers: () => { },
+	appliedCoupons: [],
+	setAppliedCoupons: () => { },
 }
 
 const Context = createContext<ContextType>(defaultValues);
@@ -62,16 +69,32 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 	const [logged, setLogged] = useState<boolean>(defaultValues.logged);
 	const [username, setUsername] = useState<string>(defaultValues.username);
 	const [theme, setTheme] = useState<"light" | "dark">(defaultValues.theme);
-	const [coupons, setCoupons] = useState<CouponData[]>([]);
-	const [reports, setReports] = useState<ReportData[]>([]);
-	const [users, setUsers] = useState<string[]>([]);
+	const [coupons, setCoupons] = useState<CouponData[]>(defaultValues.coupons);
+	const [reports, setReports] = useState<ReportData[]>(defaultValues.reports);
+	const [users, setUsers] = useState<string[]>(defaultValues.users);
+	const [appliedCoupons, setAppliedCoupons] = useState<AppliedCoupon[]>(defaultValues.appliedCoupons);
 
 	useEffect(() => {
 		localStorage.setItem("theme", theme);
 	}, [theme]);
 
 	return <>
-		<Context.Provider value={{ logged, setLogged, username, setUsername, theme, setTheme, coupons, setCoupons, reports, setReports, users, setUsers }}>
+		<Context.Provider value={{
+			logged,
+			setLogged,
+			username,
+			setUsername,
+			theme,
+			setTheme,
+			coupons,
+			setCoupons,
+			reports,
+			setReports,
+			users,
+			setUsers,
+			appliedCoupons,
+			setAppliedCoupons
+		}}>
 			{children}
 		</Context.Provider>
 	</>

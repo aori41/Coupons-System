@@ -77,6 +77,62 @@ class CouponMock implements MockRule {
 			return [200, {}];
 		});
 
+		mock.onPost("/coupons/apply").reply((config) => {
+			const data = JSON.parse(config.data);
+
+			const couponIndex = coupons.findIndex(coupon => coupon.code === data.couponCode);
+
+			if (couponIndex === -1) {
+				return [
+					404,
+					{
+						message: "Not a valid coupon"
+					}
+				];
+			}
+
+			const appliedCoupons = data.coupons.map((code: string) => coupons.find(coupon => coupon.code === code));
+
+			const usedCouponIndex = appliedCoupons.findIndex((coupon: CouponData) => coupon.code === data.couponCode);
+			if (usedCouponIndex !== -1) {
+				return [
+					400,
+					{
+						message: "Coupon code already applied"
+					}
+				];
+			}
+
+			const cantCombine = appliedCoupons.find((coupon: CouponData) => !coupon.canCombine);
+			if (cantCombine) {
+				return [
+					400,
+					{
+						message: "You already used a coupon that cannot be combined with other coupons"
+					}
+				];
+			}
+
+			if (data.coupons.length && !coupons[couponIndex].canCombine) {
+				return [
+					400,
+					{
+						message: "This Coupon cannot be combined with other coupons"
+					}
+				];
+			}
+
+			const { discountAmount, discountType } = coupons[couponIndex];
+
+			return [
+				200,
+				{
+					discountAmount,
+					discountType
+				}
+			];
+		});
+
 		mock.onPut("/coupon").reply((config) => {
 			const data = JSON.parse(config.data);
 

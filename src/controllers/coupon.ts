@@ -27,6 +27,34 @@ class CouponController extends BaseController {
 		}
 	}
 
+	async apply(couponCode: string, coupons?: string[]): Promise<{ discountAmount: number; discountType: string; message?: string; }> {
+		try {
+			const res = await this.axiosInstance.post("/coupons/apply", {
+				couponCode,
+				coupons: coupons || []
+			});
+
+			const { discountAmount, discountType } = res.data;
+
+			this.logger.info("Applied Coupon", { coupons, discountAmount, discountType });
+
+			return {
+				discountAmount,
+				discountType
+			}
+		} catch (err: any) {
+			this.logger.error("Error while trying to apply coupon", {
+				error: err
+			});
+
+			return {
+				discountAmount: 0,
+				discountType: "",
+				message: err.response.data.message || "Internal Application Error"
+			};
+		}
+	}
+
 	async create(coupon: CouponData): Promise<{ message: string; } | undefined> {
 		try {
 			await this.axiosInstance.post("/coupon", { ...coupon });
