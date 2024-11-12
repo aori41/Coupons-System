@@ -56,6 +56,21 @@ class ReportController extends BaseController {
 			}
 		}
 	}
+
+	async updateUsage(codes: string[]): Promise<{ message: string; } | undefined> {
+		try {
+			await this.axiosInstance.patch("/report", { codes });
+			this.logger.info(`Updated Report Usage`, { codes });
+		} catch (err: any) {
+			this.logger.error("Error while trying to update report usage", {
+				error: err
+			});
+
+			return {
+				message: err.response.data.message || "Internal Application Error"
+			}
+		}
+	}
 }
 
 export const reportController = new ReportController();

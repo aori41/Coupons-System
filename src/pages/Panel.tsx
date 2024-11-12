@@ -12,10 +12,7 @@ export const Panel: React.FC = () => {
 	}
 
 	return <>
-		<article className="w-full h-full flex flex-col items-center p-6" aria-labelledby="manage-heading">
-			<header>
-				<h1 id="manage-heading" className="text-2xl font-bold">Manage</h1>
-			</header>
+		<article className="w-full h-full flex flex-col items-center pb-20" aria-labelledby="manage-heading">
 			<div className="w-full h-full flex flex-col justify-between">
 				<section className="flex flex-col w-full h-[48%] p-4 gap-y-1">
 					<div className="flex justify-between items-center">

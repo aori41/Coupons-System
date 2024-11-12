@@ -1,12 +1,13 @@
 import { Button, Input, Spinner } from "@nextui-org/react";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { couponController } from "../controllers/coupon";
+import { reportController } from "../controllers/report";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import Context from "../context/Context";
 
 export const Home: React.FC = () => {
-	const { appliedCoupons, setAppliedCoupons } = useContext(Context);
+	const { appliedCoupons, setAppliedCoupons, reports, setReports } = useContext(Context);
 
 	const [couponCode, setCouponCode] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
@@ -63,8 +64,33 @@ export const Home: React.FC = () => {
 		toast.success("Coupon added successfully");
 	};
 
-	const handleFinishOrder = () => {
-		//
+	const handleFinishOrder = async () => {
+		if (!appliedCoupons.length) {
+			toast.success("Order finished successfully");
+			return;
+		}
+
+		const codes = appliedCoupons.map(applied => applied.code);
+
+		setLoading(true);
+
+		const res = await reportController.updateUsage(codes);
+
+		setLoading(false);
+
+		if (res?.message) {
+			toast.error("Failed: " + res.message);
+		}
+
+		const updatedReports = reports.map(report => {
+			if (codes.includes(report.couponCode)) {
+				return { ...report, uses: report.uses + 1 };
+			} else {
+				return report;
+			}
+		});
+		setReports(updatedReports);
+		toast.success("Order finished successfully");
 	}
 
 	if (loading) {

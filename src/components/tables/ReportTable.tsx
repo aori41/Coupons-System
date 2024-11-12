@@ -67,6 +67,8 @@ export const ReportTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 		}
 	};
 
+	const sortedReports = filteredReports.sort((a, b) => (b.createdAt - a.createdAt));
+
 	return <>
 		<div className="flex justify-between gap-4">
 			<div className="flex min-w-[50%] gap-4">
@@ -105,7 +107,7 @@ export const ReportTable: React.FC<{ setLoading: Dispatch<SetStateAction<boolean
 					</TableColumn>
 				)}
 			</TableHeader>
-			<TableBody items={filteredReports}>
+			<TableBody items={sortedReports}>
 				{(item) => (
 					<TableRow key={item.couponId}>
 						{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

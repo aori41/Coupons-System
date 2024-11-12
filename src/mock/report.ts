@@ -94,6 +94,17 @@ class ReportMock implements MockRule {
 			reports[reportIndex] = { ...reports[reportIndex], ...data };
 			return [200, {}];
 		});
+
+		mock.onPatch("/report").reply((config) => {
+			const data = JSON.parse(config.data);
+
+			reports.forEach((report, index) => {
+				if (data.codes.includes(report.couponCode)) {
+					reports[index].uses = (report.uses + 1);
+				}
+			});
+			return [200, {}];
+		});
 	};
 }
 
