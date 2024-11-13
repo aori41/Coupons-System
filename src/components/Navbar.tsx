@@ -29,7 +29,7 @@ const clearAuthCookies = () => {
 };
 
 export const NavBar: React.FC = () => {
-	const { theme, setTheme, logged, setLogged, setUsername } = useContext(Context);
+	const { theme, setTheme, logged, setLogged, setUsername, setAppliedCoupons } = useContext(Context);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 
 	const navigate = useCustomNavigate();
@@ -42,6 +42,7 @@ export const NavBar: React.FC = () => {
 		setLogged(false);
 		setUsername("");
 		clearAuthCookies();
+		setAppliedCoupons([]);
 		navigate("/");
 	}
 

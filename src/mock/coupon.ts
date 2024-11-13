@@ -103,7 +103,7 @@ class CouponMock implements MockRule {
 				];
 			}
 
-			if (coupons[couponIndex].limitUses !== undefined && coupons[couponIndex].uses !== undefined) {
+			if (coupons[couponIndex].limitUses !== undefined && coupons[couponIndex].limitUses > 0 && coupons[couponIndex].uses !== undefined) {
 				if (coupons[couponIndex].uses >= coupons[couponIndex].limitUses) {
 					return [
 						400,
